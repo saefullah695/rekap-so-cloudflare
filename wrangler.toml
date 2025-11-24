@@ -1,15 +1,18 @@
 name = "rekap-so-mobile"
-compatibility_date = "2024-01-01"
+main = "worker/main.js"
+compatibility_date = "2024-11-25"
 compatibility_flags = ["nodejs_compat"]
-
-[env.production]
-zone_id = "your-zone-id"
-account_id = "your-account-id"
 
 # Environment variables
 [vars]
 APP_NAME = "Rekap SO Mobile"
 VERSION = "1.0.0"
 
+# Static site configuration
 [site]
-bucket = "./public"
+bucket = "./public"  # Folder yang berisi index.html, app.js, dll
+
+# (Opsional) Environment production
+[env.production]
+account_id = "ganti-dengan-account-id-kamu"
+zone_id = "ganti-dengan-zone-id-jika-pakai-domain"
