@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📱 Rekap SO Mobile</title>
+    <meta name="theme-color" content="#6366f1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Memuat aplikasi...</p>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app-container hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">📱 Rekap SO</h1>
+                <button id="menuBtn" class="menu-btn">☰</button>
+            </div>
+        </header>
+
+        <!-- Navigation Menu -->
+        <nav id="sideMenu" class="side-menu">
+            <div class="menu-header">
+                <h3>Menu</h3>
+                <button id="closeMenu" class="close-btn">✕</button>
+            </div>
+            <div class="menu-items">
+                <a href="#" class="menu-item active" data-tab="dashboard">
+                    <span class="menu-icon">📊</span> Dashboard
+                </a>
+                <a href="#" class="menu-item" data-tab="rekap">
+                    <span class="menu-icon">📝</span> Buat Rekap
+                </a>
+                <a href="#" class="menu-item" data-tab="history">
+                    <span class="menu-icon">📋</span> Riwayat
+                </a>
+                <a href="#" class="menu-item" data-tab="settings">
+                    <span class="menu-icon">⚙️</span> Pengaturan
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalItems">0</div>
+                            <div class="stat-label">Total Item</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="todayRekap">0</div>
+                            <div class="stat-label">Rekap Hari Ini</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="zeroHpp">0</div>
+                            <div class="stat-label">Butuh HPP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3 class="section-title">Aksi Cepat</h3>
+                    <div class="action-grid">
+                        <button class="action-btn" data-tab="rekap">
+                            <span class="action-icon">📝</span>
+                            <span>Buat Rekap</span>
+                        </button>
+                        <button class="action-btn" id="checkHppBtn">
+                            <span class="action-icon">💰</span>
+                            <span>Cek HPP</span>
+                        </button>
+                        <button class="action-btn" data-tab="history">
+                            <span class="action-icon">📋</span>
+                            <span>Riwayat</span>
+                        </button>
+                        <button class="action-btn" id="syncBtn">
+                            <span class="action-icon">🔄</span>
+                            <span>Sync Data</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3 class="section-title">Aktivitas Terbaru</h3>
+                    <div id="recentActivity" class="activity-list">
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <p>Belum ada aktivitas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rekap Tab -->
+            <div id="rekap" class="tab-content">
+                <div class="form-container">
+                    <h2 class="form-title">Buat Rekap Baru</h2>
+                    
+                    <div class="input-group">
+                        <label class="input-label">📅 Tanggal</label>
+                        <input type="date" id="tanggal" class="input-field" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">🔄 Shift</label>
+                        <select id="shift" class="input-field" required>
+                            <option value="">Pilih Shift</option>
+                            <option value="1">Shift 1 (Pagi)</option>
+                            <option value="2">Shift 2 (Siang)</option>
+                            <option value="3">Shift 3 (Malam)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">👤 Operator</label>
+                        <input type="text" id="operator" class="input-field" placeholder="Nama operator" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">📊 Jenis Rekap</label>
+                        <select id="rekapType" class="input-field" required>
+                            <option value="both">SO & Rekonsiliasi</option>
+                            <option value="so">SO Saja</option>
+                            <option value="rekonsiliasi">Rekonsiliasi Saja</option>
+                        </select>
+                    </div>
+
+                    <!-- HPP Input Section -->
+                    <div id="hppSection" class="hpp-section hidden">
+                        <h3 class="hpp-title">💰 Input HPP Manual</h3>
+                        <div class="hpp-list" id="hppList">
+                            <!-- HPP items will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="prosesRekapBtn" class="btn btn-primary btn-large">
+                            <span class="btn-icon">🚀</span>
+                            Proses Rekap
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="history" class="tab-content">
+                <div class="history-container">
+                    <h2 class="section-title">Riwayat Rekap</h2>
+                    <div class="filter-bar">
+                        <input type="date" id="filterDate" class="input-field">
+                        <button id="filterBtn" class="btn btn-secondary">Filter</button>
+                    </div>
+                    <div id="historyList" class="history-list">
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <p>Belum ada riwayat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="settings-container">
+                    <h2 class="section-title">Pengaturan</h2>
+                    
+                    <div class="setting-group">
+                        <h3 class="setting-title">🔗 Koneksi</h3>
+                        <div class="status-item">
+                            <span>Status Google Sheets:</span>
+                            <span id="sheetsStatus" class="status-badge offline">Offline</span>
+                        </div>
+                        <button id="testConnection" class="btn btn-secondary">Test Koneksi</button>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3 class="setting-title">ℹ️ Informasi</h3>
+                        <div class="info-item">
+                            <span>Versi Aplikasi:</span>
+                            <span id="appVersion">1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Total Item:</span>
+                            <span id="totalItemsInfo">0</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <button id="clearCache" class="btn btn-warning">🔄 Clear Cache</button>
+                        <button id="refreshData" class="btn btn-primary">🔄 Refresh Data</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast hidden">
+            <span id="toastMessage"></span>
+        </div>
+
+        <!-- Modal -->
+        <div id="modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Modal Title</h3>
+                    <button id="closeModal" class="close-btn">✕</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    Modal content
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
