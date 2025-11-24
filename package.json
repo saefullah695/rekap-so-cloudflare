@@ -1,0 +1,18 @@
+{
+  "name": "rekap-so-cloudflare",
+  "version": "1.0.0",
+  "description": "Mobile-first Rekap SO System with Cloudflare Workers",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "node scripts/deploy.js",
+    "preview": "wrangler preview"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "keywords": ["cloudflare", "workers", "google-sheets", "mobile"],
+  "author": "Your Name",
+  "license": "MIT"
+}
