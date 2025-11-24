@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -11,19 +11,32 @@ const __dirname = dirname(__filename);
 console.log('🚀 Starting deployment process...');
 
 try {
-    // Build process
+    // Pastikan wrangler terinstal
+    console.log('🧩 Checking Wrangler installation...');
+    execSync('npx wrangler --version', { stdio: 'inherit' });
+
+    // Update versi di worker
     console.log('📦 Building application...');
-    
-    // Update version in worker
-    const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
-    const workerMain = readFileSync(join(__dirname, '../worker/main.js'), 'utf8');
-    const updatedWorker = workerMain.replace(/VERSION = "[\d.]+"/, `VERSION = "${packageJson.version}"`);
-    writeFileSync(join(__dirname, '../worker/main.js'), updatedWorker);
-    
-    // Deploy to Cloudflare
+    const rootDir = join(__dirname, '..');
+    const pkgPath = join(rootDir, 'package.json');
+    const workerPath = join(rootDir, 'worker/main.js');
+
+    if (!existsSync(pkgPath) || !existsSync(workerPath)) {
+        throw new Error('package.json atau worker/main.js tidak ditemukan');
+    }
+
+    const packageJson = JSON.parse(readFileSync(pkgPath, 'utf8'));
+    const workerMain = readFileSync(workerPath, 'utf8');
+    const updatedWorker = workerMain.replace(
+        /VERSION\s*=\s*"[0-9.]+"/,
+        `VERSION = "${packageJson.version}"`
+    );
+    writeFileSync(workerPath, updatedWorker);
+
+    // Deploy ke Cloudflare
     console.log('☁️ Deploying to Cloudflare Workers...');
-    execSync('wrangler deploy', { stdio: 'inherit', cwd: join(__dirname, '..') });
-    
+    execSync('npx wrangler deploy', { stdio: 'inherit', cwd: rootDir });
+
     console.log('✅ Deployment completed successfully!');
 } catch (error) {
     console.error('❌ Deployment failed:', error.message);
